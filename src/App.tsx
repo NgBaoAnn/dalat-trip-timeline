@@ -4,6 +4,7 @@ import { parseExcelBuffer, FALLBACK_TIMELINE_DATA } from './utils/excelParser';
 import { Header } from './components/Header';
 import { DayTabs } from './components/DayTabs';
 import { TimelineStream } from './components/TimelineStream';
+import { TimelineCard } from './components/TimelineCard';
 import { CuratedTableView } from './components/CuratedTableView';
 import { NotesDrawer } from './components/NotesDrawer';
 import { ExcelUploaderModal } from './components/ExcelUploaderModal';
@@ -15,6 +16,7 @@ export function App() {
   const [items, setItems] = useState<TimelineItem[]>(FALLBACK_TIMELINE_DATA);
   const [selectedDay, setSelectedDay] = useState<string>('day-1');
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const [completedIds, setCompletedIds] = useState<Set<string>>(() => {
     try {
@@ -155,6 +157,28 @@ export function App() {
       };
     });
   }, [items, completedIds, selectedOptionsMap]);
+
+  // Global Search Filter
+  const searchResults = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    const q = searchQuery.toLowerCase().trim();
+
+    return itemsWithCompletion.filter((item) => {
+      const matchMain = item.mainActivity.toLowerCase().includes(q);
+      const matchSub = item.subActivity?.toLowerCase().includes(q) || false;
+      const matchAddr = item.address?.toLowerCase().includes(q) || false;
+      const matchNote = item.note?.toLowerCase().includes(q) || false;
+      const matchCat = item.categoryLabel.toLowerCase().includes(q) || false;
+      const matchOptions = item.options?.some(
+        (opt) =>
+          opt.name.toLowerCase().includes(q) ||
+          opt.address?.toLowerCase().includes(q) ||
+          opt.note?.toLowerCase().includes(q)
+      ) || false;
+
+      return matchMain || matchSub || matchAddr || matchNote || matchCat || matchOptions;
+    });
+  }, [itemsWithCompletion, searchQuery]);
 
   // Extract Curated Tables (Quán ăn, Quán cà phê, Check in free)
   const { foodSpots, cafeSpots, freeSpots } = useMemo(() => {
@@ -302,12 +326,14 @@ export function App() {
         onResetProgress={handleResetProgress}
       />
 
-      {/* Segmented Day Tabs & Curated Tables Navigation */}
+      {/* Segmented Day Tabs & Curated Tables & Global Search Bar Navigation */}
       <DayTabs
         selectedDay={selectedDay}
         onSelectDay={setSelectedDay}
         selectedCategory={selectedCategory}
         onSelectCategory={setSelectedCategory}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
         counts={{
           day1: stats.day1Count,
           day2: stats.day2Count,
@@ -319,9 +345,66 @@ export function App() {
         }}
       />
 
-      {/* View Switcher: Main Timeline vs Curated Dedicated Tables */}
+      {/* View Switcher: Global Search Results vs Curated Dedicated Tables vs Main Timeline */}
       <div className="flex-1">
-        {selectedDay === 'table-food' ? (
+        {searchQuery.trim() !== '' ? (
+          <main className="w-full py-8 px-4 sm:px-8">
+            <div className="max-w-3xl mx-auto">
+              
+              {/* Search Header Banner */}
+              <div className="mb-6 bg-white border border-[#1F2421] p-5 shadow-xs flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <span className="text-[10px] font-mono text-[#71717A] uppercase tracking-widest block mb-0.5">
+                    KẾT QUẢ TÌM KIẾM CHUNG
+                  </span>
+                  <h2 className="font-serif-title text-xl sm:text-2xl font-bold text-[#1F2421]">
+                    Từ khóa: "{searchQuery}"
+                  </h2>
+                  <p className="font-sans-body text-xs text-[#52525B] mt-1">
+                    Tìm thấy <strong className="font-mono text-[#2D4A3E] font-bold">{searchResults.length}</strong> địa điểm / hoạt động phù hợp trong toàn bộ chuyến đi
+                  </p>
+                </div>
+
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="px-3.5 py-1.5 bg-[#1F2421] text-white text-xs font-mono tracking-wider hover:bg-[#2D4A3E] transition-colors cursor-pointer"
+                >
+                  Xóa tìm kiếm
+                </button>
+              </div>
+
+              {/* Search Results List */}
+              {searchResults.length > 0 ? (
+                <div className="space-y-4">
+                  {searchResults.map((item) => (
+                    <TimelineCard
+                      key={item.id}
+                      item={item}
+                      onToggleComplete={handleToggleComplete}
+                      onSelectOption={handleSelectOption}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="bg-white border border-[#E7E5E4] p-8 text-center my-6">
+                  <span className="block text-xs font-mono text-[#71717A] tracking-widest uppercase mb-2">
+                    Không tìm thấy địa điểm
+                  </span>
+                  <p className="font-serif-sub italic text-base text-[#52525B] mb-4">
+                    Không tìm thấy quán ăn, quán cà phê hay điểm check-in nào khớp với từ khóa "{searchQuery}".
+                  </p>
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="px-4 py-2 bg-[#1F2421] text-white text-xs font-mono tracking-wider hover:bg-[#2D4A3E] transition-colors cursor-pointer"
+                  >
+                    Xem lại toàn bộ lịch trình
+                  </button>
+                </div>
+              )}
+
+            </div>
+          </main>
+        ) : selectedDay === 'table-food' ? (
           <CuratedTableView
             type="FOOD"
             spots={foodSpots}

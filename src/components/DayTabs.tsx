@@ -5,6 +5,8 @@ interface DayTabsProps {
   onSelectDay: (day: string) => void;
   selectedCategory: string; // 'ALL' | CategoryKey
   onSelectCategory: (cat: string) => void;
+  searchQuery: string;
+  onSearchChange: (q: string) => void;
   counts: {
     day1: number;
     day2: number;
@@ -21,6 +23,8 @@ export const DayTabs: React.FC<DayTabsProps> = ({
   onSelectDay,
   selectedCategory,
   onSelectCategory,
+  searchQuery,
+  onSearchChange,
   counts,
 }) => {
   const days = [
@@ -51,6 +55,25 @@ export const DayTabs: React.FC<DayTabsProps> = ({
     <div className="w-full bg-[#FDFBF7] sticky top-0 z-20 border-b border-[#E7E5E4] py-3 px-4 sm:px-8 backdrop-blur-md bg-opacity-95">
       <div className="max-w-4xl mx-auto space-y-3">
         
+        {/* Global Search Input Bar */}
+        <div className="relative">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => onSearchChange(e.target.value)}
+            placeholder="TÌM KIẾM CHUNG: Nhập tên quán ăn, tiệm cà phê, điểm check-in free hoặc địa chỉ..."
+            className="w-full pl-3 pr-24 py-2 bg-white border border-[#1F2421] text-xs font-sans-body text-[#1F2421] placeholder-[#71717A] focus:outline-none focus:ring-1 focus:ring-[#1F2421] shadow-2xs"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => onSearchChange('')}
+              className="absolute right-2 top-1.5 px-2.5 py-1 bg-[#F5F5F4] text-[#1F2421] text-[10px] font-mono border border-[#D4D4D8] hover:bg-[#1F2421] hover:text-white transition-colors cursor-pointer"
+            >
+              Xóa tìm kiếm
+            </button>
+          )}
+        </div>
+
         {/* Main Timeline Day Tabs */}
         <div className="flex items-center space-x-1.5 sm:space-x-2 overflow-x-auto no-scrollbar pb-1">
           {days.map((d) => {
