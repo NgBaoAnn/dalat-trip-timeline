@@ -32,11 +32,11 @@ export const TimelineStream: React.FC<TimelineStreamProps> = ({
   };
 
   return (
-    <main className="w-full py-8 px-4 sm:px-8">
+    <main className="w-full py-8 px-2 sm:px-8">
       <div className="max-w-3xl mx-auto">
         
         {/* Section Header Banner */}
-        <div className="mb-8 border-b-2 border-[#1F2421] pb-3 flex flex-wrap items-baseline justify-between gap-2">
+        <div className="mb-8 border-b-2 border-[#1F2421] pb-3 flex flex-wrap items-baseline justify-between gap-2 px-2 sm:px-0">
           <h2 className="font-serif-title text-xl sm:text-2xl font-bold tracking-tight text-[#1F2421] uppercase">
             {getDayTitle()}
           </h2>
@@ -45,24 +45,43 @@ export const TimelineStream: React.FC<TimelineStreamProps> = ({
           </span>
         </div>
 
-        {/* Vertical Timeline Container */}
+        {/* Vertical Timeline Stream Layout */}
         {items.length > 0 ? (
-          <div className="relative pl-3 sm:pl-6 border-l border-[#E7E5E4] space-y-2 ml-1 sm:ml-2">
+          <div className="relative space-y-3">
+            
+            {/* Continuous Vertical Timeline Line behind dots */}
+            <div className="absolute left-[54px] sm:left-[76px] top-6 bottom-6 w-[1px] bg-[#E7E5E4] z-0" />
+
             {items.map((item) => (
-              <div key={item.id} className="relative">
-                {/* Timeline Hairline Node Dot */}
-                <div
-                  className={`absolute -left-[17px] sm:-left-[29px] top-6 w-2.5 h-2.5 border ${
-                    item.completed
-                      ? 'bg-[#2D4A3E] border-[#2D4A3E]'
-                      : 'bg-[#FDFBF7] border-[#1F2421]'
-                  }`}
-                />
-                <TimelineCard
-                  item={item}
-                  onToggleComplete={onToggleComplete}
-                  onSelectOption={onSelectOption}
-                />
+              <div key={item.id} className="relative flex items-start space-x-2 sm:space-x-4 z-10">
+                
+                {/* Left Side: Time Badge on Timeline */}
+                <div className="w-[50px] sm:w-[68px] shrink-0 text-right pt-4">
+                  <span className="font-mono text-[11px] sm:text-xs font-bold text-[#1F2421] bg-[#F5F5F4] px-1.5 py-0.5 border border-[#E7E5E4] inline-block shadow-2xs">
+                    {item.time}
+                  </span>
+                </div>
+
+                {/* Center: Timeline Node Dot */}
+                <div className="relative flex flex-col items-center shrink-0 pt-5">
+                  <div
+                    className={`w-3 h-3 border transition-colors duration-150 ${
+                      item.completed
+                        ? 'bg-[#2D4A3E] border-[#2D4A3E]'
+                        : 'bg-[#FDFBF7] border-[#1F2421]'
+                    }`}
+                  />
+                </div>
+
+                {/* Right Side: Activity Card */}
+                <div className="flex-1 min-w-0">
+                  <TimelineCard
+                    item={item}
+                    onToggleComplete={onToggleComplete}
+                    onSelectOption={onSelectOption}
+                  />
+                </div>
+
               </div>
             ))}
           </div>

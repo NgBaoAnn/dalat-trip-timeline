@@ -74,20 +74,13 @@ export const TimelineCard: React.FC<TimelineCardProps> = ({
           : 'border-[#E7E5E4] hover:border-[#1F2421] shadow-xs'
       }`}
     >
-      {/* Top Meta Line: Time + Category + Price */}
+      {/* Top Meta Line: Category Tag + Estimated Price (Time moved to timeline stream) */}
       <div className="flex flex-wrap items-center justify-between gap-2 mb-3 pb-2 border-b border-[#F5F5F4]">
         
-        <div className="flex items-center space-x-2">
-          {/* Time Badge */}
-          <span className="font-mono text-xs font-bold tracking-widest text-[#1F2421] bg-[#F5F5F4] px-2 py-0.5 border border-[#E7E5E4]">
-            {item.time}
-          </span>
-
-          {/* Category Tag */}
-          <span className={`text-[10px] font-mono font-semibold px-2 py-0.5 border uppercase ${getBadgeStyle()}`}>
-            {item.categoryLabel}
-          </span>
-        </div>
+        {/* Category Tag */}
+        <span className={`text-[10px] font-mono font-semibold px-2 py-0.5 border uppercase ${getBadgeStyle()}`}>
+          {item.categoryLabel}
+        </span>
 
         {/* Estimated Price */}
         {item.price !== null && (
