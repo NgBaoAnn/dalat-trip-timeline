@@ -11,14 +11,14 @@ export function detectCategory(text: string): { key: CategoryKey; label: string 
   if (/cà phê|cafe|chill|hoàng hôn|waken|cheo veo|reo|vùng ngoại ô|hidden land|túi mơ to|góc của tùng|chênh vênh/.test(str)) {
     return { key: 'CAFE', label: 'CAFE & THƯ GIÃN' };
   }
-  if (/săn mây|đồi|checkin|check in|tham quan|thuê đồ|hồ xuân hương|viện sinh học|tháp vinaphone|bức tường|đường|làng mơ|măng lin|đập tràn|cầu đất|hòn bồ|cung đường|bắc âu/.test(str)) {
-    return { key: 'THAM_QUAN', label: 'THAM QUAN' };
-  }
   if (/home|nghỉ ngơi|make up|thức dậy|về nghỉ|về home|dọn đồ/.test(str)) {
     return { key: 'LUU_TRU', label: 'LƯU TRÚ & NGHỈ NGƠI' };
   }
-  if (/xe|lên xe|thuê xe|trả xe|di chuyển|về|đến đà lạt/.test(str)) {
+  if (/xe|lên xe|thuê xe|trả xe|di chuyển|về|đến đà lạt|thuê đồ|trang phục/.test(str)) {
     return { key: 'DI_CHUYEN', label: 'DI CHUYỂN' };
+  }
+  if (/săn mây|đồi|checkin|check in|tham quan|hồ xuân hương|viện sinh học|tháp vinaphone|bức tường|đường|làng mơ|măng lin|đập tràn|cầu đất|hòn bồ|cung đường|bắc âu/.test(str)) {
+    return { key: 'THAM_QUAN', label: 'THAM QUAN' };
   }
 
   return { key: 'THAM_QUAN', label: 'THAM QUAN' };
@@ -143,8 +143,8 @@ export const FALLBACK_TIMELINE_DATA: TimelineItem[] = [
     address: 'Tiệm thuê đồ concept Đà Lạt',
     price: null,
     note: 'Lựa chọn outfit chụp hình sống ảo',
-    category: 'THAM_QUAN',
-    categoryLabel: 'THAM QUAN',
+    category: 'DI_CHUYEN',
+    categoryLabel: 'DI CHUYỂN',
     isBackup: false,
     completed: false
   },
