@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-paper: #FDFBF7;
+    --text-primary: #1F2421;
+    --text-muted: #71717A;
+    --border-hairline: #E7E5E4;
+  }
+
+  body {
+    font-family: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
+    background-color: #FDFBF7;
+    color: #1F2421;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+.font-serif-title {
+  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+}
+
+.font-serif-sub {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+.font-sans-body {
+  font-family: 'Be Vietnam Pro', system-ui, sans-serif;
+}
+
+/* Custom hairline borders */
+.border-hairline {
+  border-color: rgba(214, 211, 209, 0.7);
+}
+
+/* Custom scrollbar for horizontal tabs */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
